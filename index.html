@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#236d57">
+  <meta name="description" content="Тренировка по типам химической связи: 32 вопроса, объяснения и повтор ошибок">
+  <title>Типы химической связи</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="main">
+    <section id="welcome" aria-labelledby="welcome-title">
+      <h1 id="welcome-title">Разберись в<br>химических связях</h1>
+      <p class="intro">Смотри на формулу вещества и выбирай тип связи<br>После каждого ответа узнавай, почему он правильный</p>
+
+      <div class="welcome-card">
+        <div class="facts">
+          <div><strong>32</strong><span>задания</span></div>
+          <div><strong>4</strong><span>типа связи</span></div>
+          <div><strong class="positive">+1</strong><span>за верный ответ</span></div>
+          <div><strong class="negative">-1</strong><span>за ошибку</span></div>
+        </div>
+        <div class="category-list" aria-label="Типы связи">
+          <div><span>01</span>Ковалентная полярная</div>
+          <div><span>02</span>Ковалентная неполярная</div>
+          <div><span>03</span>Ионная</div>
+          <div><span>04</span>Металлическая</div>
+        </div>
+        <div class="welcome-bottom"><span>По восемь примеров на каждый тип</span><span>Без таймера</span></div>
+      </div>
+
+      <div class="start-row">
+        <button class="button button-primary" id="start" type="button">Начать тренировку <span aria-hidden="true">→</span></button>
+        <button class="button button-secondary" id="rules-open" type="button">Правила игры</button>
+        <p class="start-note">Счет может быть отрицательным<br>Ошибки можно повторить в конце</p>
+      </div>
+      <noscript><p class="notice">Для проверки ответов и подсчета баллов включи JavaScript в браузере</p></noscript>
+    </section>
+
+    <section id="play" aria-label="Тренировка" hidden>
+      <div class="round-top">
+        <div><p class="eyebrow" id="round-mode">Тренировка</p><p class="counter" id="counter">Задание 1 из 32</p></div>
+        <div class="score-box"><span>Баллы</span><strong id="score">0</strong></div>
+      </div>
+      <progress id="progress" value="0" max="32" aria-label="Выполнено заданий"></progress>
+
+      <div class="question-card">
+        <p class="question-label">Какой здесь тип химической связи?</p>
+        <h1 class="formula" id="formula" tabindex="-1">NaCl</h1>
+        <p class="question-context" id="context"></p>
+      </div>
+
+      <div class="answers" role="group" aria-label="Варианты ответа">
+        <button class="answer" data-choice="0" type="button"><span class="answer-key" aria-hidden="true">1</span><span class="answer-label">Ковалентная полярная</span><span class="answer-mark" aria-hidden="true"></span></button>
+        <button class="answer" data-choice="1" type="button"><span class="answer-key" aria-hidden="true">2</span><span class="answer-label">Ковалентная неполярная</span><span class="answer-mark" aria-hidden="true"></span></button>
+        <button class="answer" data-choice="2" type="button"><span class="answer-key" aria-hidden="true">3</span><span class="answer-label">Ионная</span><span class="answer-mark" aria-hidden="true"></span></button>
+        <button class="answer" data-choice="3" type="button"><span class="answer-key" aria-hidden="true">4</span><span class="answer-label">Металлическая</span><span class="answer-mark" aria-hidden="true"></span></button>
+      </div>
+
+      <div id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true" hidden>
+        <div class="feedback-heading"><h2 id="feedback-title"></h2><span id="score-change" class="score-change"></span></div>
+        <p id="feedback-text"></p>
+      </div>
+      <div class="question-bottom"><p id="keyboard-hint">Клавиши 1-4 для выбора ответа</p><button class="button button-primary" id="next" type="button" hidden>Следующее задание <span aria-hidden="true">→</span></button></div>
+    </section>
+
+    <section id="results" aria-labelledby="results-title" hidden>
+      <p class="eyebrow" id="results-mode">Тренировка завершена</p>
+      <h1 class="results-title" id="results-title" tabindex="-1">Твои результаты</h1>
+      <div class="results-card">
+        <div class="results-main"><div><span class="metric-label">Итоговый счет</span><strong id="final-score">0</strong><span class="score-equation" id="score-equation"></span></div><div class="accuracy"><strong id="accuracy">0%</strong><span>правильных ответов</span></div></div>
+        <div class="result-counts"><span>Верно <strong id="correct-count">0</strong></span><span>Ошибок <strong id="wrong-count">0</strong></span><span>Всего <strong id="total-count">32</strong></span></div>
+        <div id="breakdown" class="breakdown" aria-label="Результат по типам связи"></div>
+      </div>
+      <p class="result-hint" id="result-hint"></p>
+      <div class="result-actions"><button class="button button-primary" id="review" type="button">Повторить ошибки</button><button class="button button-secondary" id="restart" type="button">Новая тренировка</button></div>
+      <details class="mistakes" id="mistakes" hidden><summary>Разбор ошибок <span id="mistakes-count"></span></summary><div id="mistakes-list"></div></details>
+    </section>
+  </main>
+
+  <dialog id="rules" aria-labelledby="rules-title">
+    <div class="dialog-heading"><h2 id="rules-title">Как играть</h2><button class="close-button" id="rules-close" type="button" aria-label="Закрыть правила">×</button></div>
+    <ol class="rules-list"><li>Определи тип связи по формуле вещества</li><li>Выбери один из четырех ответов мышью или клавишами 1-4</li><li>За верный ответ получи +1 балл, за ошибку потеряй 1 балл</li><li>Прочитай объяснение и переходи дальше кнопкой или клавишей Enter</li><li>В конце посмотри результат и повтори ошибки</li></ol>
+    <p class="rules-note">Засчитывается только первый ответ<br>Счет может уходить ниже нуля<br>Повтор ошибок начинается с нулевого счета<br>После обновления страницы результат сбрасывается</p>
+    <button class="button button-primary" id="rules-done" type="button">Все понятно</button>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const labels = ['Ковалентная полярная', 'Ковалентная неполярная', 'Ионная', 'Металлическая'];
+      const bank = [];
+      const polar = [
+        ['HCl', 'H-Cl', 'Хлор сильнее притягивает общую электронную пару, чем водород\nПоэтому связь H-Cl полярная'],
+        ['HF', 'H-F', 'Фтор сильнее притягивает общую электронную пару, чем водород\nЭлектронная плотность смещена к фтору'],
+        ['HBr', 'H-Br', 'Бром более электроотрицателен, чем водород\nОбщая электронная пара смещена к атому брома'],
+        ['HI', 'H-I', 'Йод более электроотрицателен, чем водород\nОбщая электронная пара смещена к атому йода'],
+        ['H₂O', 'O-H', 'Кислород сильнее притягивает общие электронные пары, чем водород\nСвязи O-H в молекуле воды полярные'],
+        ['NH₃', 'N-H', 'Азот более электроотрицателен, чем водород\nЭлектронная плотность связей N-H смещена к азоту'],
+        ['H₂S', 'S-H', 'Сера более электроотрицательна, чем водород\nСвязи S-H слабо полярны: электронная плотность смещена к сере'],
+        ['CO₂', 'C-O', 'Связи C-O полярные: кислород сильнее притягивает электроны\nПри этом молекула CO₂ в целом неполярна: дипольные моменты двух связей компенсируются']
+      ];
+      polar.forEach(([formula, bond, explanation]) => bank.push({ formula, kind: 0, context: `Рассматриваем связь ${bond} в молекуле`, explanation }));
+      ['H₂', 'N₂', 'O₂', 'F₂', 'Cl₂', 'Br₂', 'I₂', 'S₈'].forEach(formula => bank.push({ formula, kind: 1, context: 'Рассматриваем связи между атомами в молекуле', explanation: 'Связаны атомы одного элемента с одинаковой электроотрицательностью\nОбщая электронная плотность не смещена к одному из атомов, поэтому связь неполярная' }));
+      [['NaCl', 'Na⁺ и Cl⁻'], ['KCl', 'K⁺ и Cl⁻'], ['NaF', 'Na⁺ и F⁻'], ['KF', 'K⁺ и F⁻'], ['MgO', 'Mg²⁺ и O²⁻'], ['CaO', 'Ca²⁺ и O²⁻'], ['MgCl₂', 'Mg²⁺ и Cl⁻'], ['CaCl₂', 'Ca²⁺ и Cl⁻']].forEach(([formula, ions]) => bank.push({ formula, kind: 2, context: 'Рассматриваем связь в твердом веществе', explanation: `В кристалле находятся противоположно заряженные ионы ${ions}\nИх электростатическое притяжение создает ионную связь` }));
+      ['Fe', 'Cu', 'Al', 'Mg', 'Na', 'K', 'Ca', 'Zn'].forEach(formula => bank.push({ formula, kind: 3, context: 'Рассматриваем связь в твердом веществе', explanation: 'Это металл\nЕго валентные электроны делокализованы и участвуют в связывании всего кристалла\nТакая связь называется металлической' }));
+
+      const byId = id => document.getElementById(id);
+      const screens = ['welcome', 'play', 'results'];
+      const buttons = [...document.querySelectorAll('[data-choice]')];
+      const rules = byId('rules');
+      let round = null;
+
+      function shuffle(source) {
+        const result = source.slice();
+        for (let i = result.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+      }
+
+      function stats() {
+        const correct = round.answers.filter((answer, i) => answer === round.questions[i].kind).length;
+        const wrong = round.answers.length - correct;
+        return { correct, wrong, score: correct - wrong };
+      }
+
+      function mistakes() {
+        return round.questions.filter((question, i) => i < round.answers.length && round.answers[i] !== question.kind);
+      }
+
+      function showScreen(name) {
+        screens.forEach(id => { byId(id).hidden = id !== name; });
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+
+      function start(questions, review = false) {
+        if (!questions.length) return;
+        round = { questions: shuffle(questions), answers: [], index: 0, review, complete: false };
+        byId('round-mode').textContent = review ? 'Повтор ошибок' : 'Тренировка';
+        showScreen('play');
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        const question = round.questions[round.index];
+        byId('counter').textContent = `Задание ${round.index + 1} из ${round.questions.length}`;
+        byId('score').textContent = stats().score;
+        byId('progress').max = round.questions.length;
+        byId('progress').value = round.answers.length;
+        byId('formula').textContent = question.formula;
+        byId('context').textContent = question.context;
+        byId('feedback').hidden = true;
+        byId('feedback').className = 'feedback';
+        byId('feedback-title').textContent = '';
+        byId('feedback-text').textContent = '';
+        byId('next').hidden = true;
+        byId('keyboard-hint').textContent = 'Клавиши 1-4 для выбора ответа';
+        buttons.forEach((button, i) => {
+          button.disabled = false;
+          button.classList.remove('is-correct', 'is-wrong');
+          button.querySelector('.answer-mark').textContent = '';
+          button.setAttribute('aria-label', `${i + 1} ${labels[i]}`);
+        });
+        byId('formula').focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+
+      function answer(choice) {
+        if (!round || round.complete || round.answers.length > round.index || !Number.isInteger(choice) || choice < 0 || choice > 3) return;
+        const question = round.questions[round.index];
+        const correct = choice === question.kind;
+        round.answers.push(choice);
+        buttons.forEach((button, i) => {
+          button.disabled = true;
+          if (i === question.kind) {
+            button.classList.add('is-correct');
+            button.querySelector('.answer-mark').textContent = '✓';
+            button.setAttribute('aria-label', `${labels[i]} Правильный ответ`);
+          } else if (i === choice) {
+            button.classList.add('is-wrong');
+            button.querySelector('.answer-mark').textContent = '×';
+            button.setAttribute('aria-label', `${labels[i]} Выбранный неверный ответ`);
+          }
+        });
+        byId('score').textContent = stats().score;
+        byId('progress').value = round.answers.length;
+        byId('feedback').className = correct ? 'feedback feedback-correct' : 'feedback feedback-wrong';
+        byId('feedback-title').textContent = correct ? 'Верно!' : `Верный ответ: ${labels[question.kind].toLowerCase()}`;
+        byId('feedback-text').textContent = question.explanation;
+        byId('score-change').textContent = correct ? '+1 балл' : '-1 балл';
+        byId('feedback').hidden = false;
+        byId('next').textContent = round.index === round.questions.length - 1 ? 'Посмотреть результат →' : 'Следующее задание →';
+        byId('next').hidden = false;
+        byId('keyboard-hint').textContent = 'Enter для продолжения';
+        byId('next').focus({ preventScroll: true });
+        const bounds = byId('next').getBoundingClientRect();
+        if (bounds.bottom > window.innerHeight) byId('feedback').scrollIntoView({ block: 'start', behavior: 'instant' });
+      }
+
+      function next() {
+        if (!round || round.complete || round.answers.length <= round.index) return;
+        round.index++;
+        if (round.index === round.questions.length) {
+          round.complete = true;
+          renderResults();
+        } else {
+          renderQuestion();
+        }
+      }
+
+      function renderResults() {
+        const { correct, wrong, score } = stats();
+        const errors = mistakes();
+        byId('results-mode').textContent = round.review ? 'Повтор ошибок завершен' : 'Тренировка завершена';
+        byId('results-title').textContent = wrong === 0 ? 'Все связи найдены!' : 'Твои результаты';
+        byId('final-score').textContent = score;
+        byId('final-score').classList.toggle('negative', score < 0);
+        byId('score-equation').textContent = `${correct} верных - ${wrong} ошибок`;
+        byId('accuracy').textContent = `${Math.round(correct / round.questions.length * 100)}%`;
+        byId('correct-count').textContent = correct;
+        byId('wrong-count').textContent = wrong;
+        byId('total-count').textContent = round.questions.length;
+        byId('breakdown').replaceChildren();
+        labels.forEach((label, kind) => {
+          const total = round.questions.filter(question => question.kind === kind).length;
+          if (!total) return;
+          const count = round.answers.filter((choice, i) => round.questions[i].kind === kind && choice === kind).length;
+          const row = document.createElement('div');
+          row.className = 'breakdown-row';
+          const name = document.createElement('span');
+          name.textContent = label;
+          const value = document.createElement('strong');
+          value.textContent = `${count} из ${total}`;
+          row.append(name, value);
+          byId('breakdown').append(row);
+        });
+        byId('result-hint').textContent = errors.length ? `Заданий с ошибками: ${errors.length}\nПовтори их в отдельном раунде или прочитай объяснения ниже` : 'Отличный результат\nМожно начать новую тренировку с другим порядком вопросов';
+        byId('review').hidden = errors.length === 0;
+        byId('mistakes').hidden = errors.length === 0;
+        byId('mistakes').open = false;
+        byId('mistakes-count').textContent = errors.length;
+        byId('mistakes-list').replaceChildren();
+        errors.forEach(question => {
+          const item = document.createElement('article');
+          item.className = 'mistake';
+          const title = document.createElement('h3');
+          title.textContent = `${question.formula}: ${labels[question.kind].toLowerCase()}`;
+          const text = document.createElement('p');
+          text.textContent = question.explanation;
+          item.append(title, text);
+          byId('mistakes-list').append(item);
+        });
+        showScreen('results');
+        byId('results-title').focus({ preventScroll: true });
+      }
+
+      byId('start').addEventListener('click', () => start(bank));
+      byId('restart').addEventListener('click', () => start(bank));
+      byId('review').addEventListener('click', () => { if (round && round.complete) start(mistakes(), true); });
+      byId('next').addEventListener('click', next);
+      buttons.forEach(button => button.addEventListener('click', () => answer(Number(button.dataset.choice))));
+      byId('rules-open').addEventListener('click', () => rules.showModal());
+      byId('rules-close').addEventListener('click', () => rules.close());
+      byId('rules-done').addEventListener('click', () => rules.close());
+      document.addEventListener('keydown', event => {
+        if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey || rules.open || !round || round.complete || byId('play').hidden) return;
+        if (/^[1-4]$/.test(event.key)) {
+          event.preventDefault();
+          answer(Number(event.key) - 1);
+        } else if (event.key === 'Enter' && round.answers.length > round.index) {
+          event.preventDefault();
+          next();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
